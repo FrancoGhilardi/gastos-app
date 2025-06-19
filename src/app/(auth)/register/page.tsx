@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { registerAction } from "@server/modules/user/actions";
+import { registerAction } from "@server/modules/user/actions/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -33,27 +33,32 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (data: FormValues) => {
-    const result = await registerAction(data);
+    try {
+      const result = await registerAction(data);
 
-    if (!result.success) {
-      if (result.errors) console.error(result.errors);
-      if (result.message) setServerError(result.message);
-      return;
+      if (!result.success) {
+        if (result.errors) console.error("Validation errors:", result.errors);
+        if (result.message) setServerError(result.message);
+        return;
+      }
+
+      const loginResult = await signIn("credentials", {
+        redirect: false,
+        email: result.email,
+        password: result.password,
+      });
+
+      if (loginResult?.error) {
+        setServerError("Error al iniciar sesión automáticamente");
+        return;
+      }
+
+      setSuccess(true);
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Error en onSubmit:", error);
+      setServerError("Error inesperado. Revisa la consola.");
     }
-
-    const loginResult = await signIn("credentials", {
-      redirect: false,
-      email: result.email,
-      password: result.password,
-    });
-
-    if (loginResult?.error) {
-      setServerError("Error al iniciar sesión automáticamente");
-      return;
-    }
-
-    setSuccess(true);
-    router.push("/dashboard");
   };
 
   return (

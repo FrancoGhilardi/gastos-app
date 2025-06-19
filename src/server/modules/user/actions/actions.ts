@@ -30,14 +30,17 @@ export async function registerAction(
   }
 
   try {
-    await registerUser(parsed.data);
+    const { confirmPassword, ...userData } = parsed.data;
+
+    await registerUser(userData);
 
     return {
       success: true,
-      email: parsed.data.email,
-      password: parsed.data.password,
+      email: userData.email,
+      password: userData.password,
     };
-  } catch (e: any) {
-    return { success: false, message: e.message };
+  } catch (error: any) {
+    console.error("Error en registerUser:", error);
+    throw new Error(error.message || "Error al registrar usuario");
   }
 }
