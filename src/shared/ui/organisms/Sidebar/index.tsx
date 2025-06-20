@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@shared/ui/atoms";
 import { Home, LogOut, Menu, User, X } from "lucide-react";
 import Link from "next/link";
@@ -12,7 +13,7 @@ const navItems = [
   },
   {
     label: "Perfil",
-    href: "/profile",
+    href: "/dashboard/profile",
     icon: User,
   },
 ];
