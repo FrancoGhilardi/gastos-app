@@ -7,3 +7,9 @@ export type RegisterInput = {
 };
 
 export type CardProps = React.HTMLAttributes<HTMLDivElement>;
+
+export interface MonthSelectorProps {
+  currentMonth: number;
+  currentYear: number;
+  onMonthChange: (month: number, year: number) => void;
+}
