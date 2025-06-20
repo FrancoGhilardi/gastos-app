@@ -6,6 +6,17 @@ import { z } from "zod";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import {
+  Button,
+  CardDescription,
+  CardTitle,
+  Input,
+  Label,
+} from "@shared/ui/atoms";
+import { CardContent, CardFooter, CardHeader } from "@shared/ui/molecules";
+import { Card } from "@shared/ui/organisms";
+import { LockKeyhole, Mail } from "lucide-react";
+import Link from "next/link";
 
 const schema = z.object({
   email: z.string().email(),
@@ -19,11 +30,11 @@ export default function LoginPage() {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
 
-  //   useEffect(() => {
-  //     if (status === "authenticated") {
-  //       router.replace("/dashboard");
-  //     }
-  //   }, [status, router]);
+  // useEffect(() => {
+  //   if (status === "authenticated") {
+  //     router.replace("/dashboard");
+  //   }
+  // }, [status, router]);
 
   const {
     register,
@@ -54,49 +65,77 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-4 border rounded">
-      <h2 className="text-2xl font-bold mb-4">Iniciar sesión</h2>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-        <input
-          type="email"
-          placeholder="Email"
-          {...register("email")}
-          className="input"
-        />
-        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-
-        <input
-          type="password"
-          placeholder="Contraseña"
-          {...register("password")}
-          className="input"
-        />
-        {errors.password && (
-          <p className="text-red-500">{errors.password.message}</p>
-        )}
-
-        {serverError && <p className="text-red-500">{serverError}</p>}
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="bg-blue-600 text-white py-2 px-4 rounded"
-        >
-          {isSubmitting ? "Ingresando..." : "Ingresar"}
-        </button>
-      </form>
-
-      <p className="mt-4">
-        ¿No tienes cuenta?{" "}
-        <button
-          type="button"
-          onClick={() => router.push("/register")}
-          className="text-blue-600 underline"
-        >
-          Regístrate aquí
-        </button>
-      </p>
+    <div className="flex min-h-screen items-center justify-center bg-gray-900 p-4">
+      <Card className="w-full max-w-md bg-gray-800 border-gray-700">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-white">
+            Iniciar sesión
+          </CardTitle>
+          <CardDescription className="text-gray-400">
+            Ingresa tus credenciales para acceder a tu cuenta
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-white">
+                Correo electrónico
+              </Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="tu@email.com"
+                  className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                  {...register("email")}
+                  required
+                />
+                {errors.email && (
+                  <p className="text-red-500">{errors.email.message}</p>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-white">
+                Contraseña
+              </Label>
+              <div className="relative">
+                <LockKeyhole className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="password"
+                  type="password"
+                  className="pl-10 bg-gray-700 border-gray-600 text-white"
+                  {...register("password")}
+                  required
+                />
+                {errors.password && (
+                  <p className="text-red-500">{errors.password.message}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4">
+            <Button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Iniciando sesión..." : "Ingresar"}
+            </Button>
+            <div className="text-center text-sm text-gray-400">
+              ¿No tienes una cuenta?{" "}
+              <Link
+                href="/register"
+                className="font-medium text-blue-400 hover:underline"
+              >
+                Regístrate
+              </Link>
+            </div>
+          </CardFooter>
+          {serverError && <p className="text-red-500">{serverError}</p>}
+        </form>
+      </Card>
     </div>
   );
 }

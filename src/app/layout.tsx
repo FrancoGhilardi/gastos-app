@@ -1,36 +1,34 @@
-"use client";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { Providers } from "./providers";
 
-import { SessionProvider } from "next-auth/react";
-import { ReactNode } from "react";
-import { Inter } from "next/font/google";
-// import type { Metadata } from "next";
-import { Toaster } from "react-hot-toast";
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
-const inter = Inter({ subsets: ["latin"] });
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
-// export const metadata: Metadata = {
-//   title: "Control de Gastos Personales",
-//   description: "Aplicación para controlar tus gastos personales",
-// };
+export const metadata: Metadata = {
+  title: "Control de Gastos Personales",
+  description: "Aplicación para controlar tus gastos personales",
+};
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="es" className="dark">
-      <body className={`${inter.className} bg-gray-900 text-white`}>
-        <SessionProvider>
-          {/* <AuthProvider> */}
-          {children}
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              style: {
-                background: "#374151",
-                color: "#fff",
-              },
-            }}
-          />
-          {/* </AuthProvider> */}
-        </SessionProvider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white`}
+      >
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

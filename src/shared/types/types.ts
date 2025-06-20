@@ -5,3 +5,5 @@ export type RegisterInput = {
   password: string;
   birthDate: Date;
 };
+
+export type CardProps = React.HTMLAttributes<HTMLDivElement>;
