@@ -30,11 +30,11 @@ export default function LoginPage() {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   if (status === "authenticated") {
-  //     router.replace("/dashboard");
-  //   }
-  // }, [status, router]);
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/dashboard");
+    }
+  }, [status, router]);
 
   const {
     register,
@@ -127,7 +127,7 @@ export default function LoginPage() {
               ¿No tienes una cuenta?{" "}
               <Link
                 href="/register"
-                className="font-medium text-blue-400 hover:underline"
+                className="text-blue-400 hover:underline font-bold"
               >
                 Regístrate
               </Link>
