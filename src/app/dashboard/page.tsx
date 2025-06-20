@@ -4,26 +4,27 @@ import { useState } from "react";
 import { Button } from "@shared/ui/atoms";
 import { MonthlySummary, MonthSelector } from "@shared/ui/molecules";
 import { Plus } from "lucide-react";
+import { TransactionList, TransactionModal } from "@shared/ui/organisms";
+import { TransactionType } from "@prisma/client";
 
 const monthlyTransactions = [
   {
-    id: "1",
-    userId: 1,
-    tipo: "ingreso",
-    categoria: "Salario",
-    monto: 5000,
-    detalles: "Salario mensual",
-    fecha: new Date().toISOString(),
+    id: 1,
+    type: TransactionType.INCOME,
+    category: "Test",
+    amount: 0,
+    notes: "adasd",
+    date: new Date(),
+    paymentMethod: "Efectivo",
   },
   {
-    id: "2",
-    userId: 2,
-    tipo: "egreso",
-    categoria: "Alimentos",
-    monto: 1200,
-    detalles: "Compra semanal",
-    fecha: new Date().toISOString(),
-    medioPago: "Tarjeta de crédito",
+    id: 2,
+    type: TransactionType.EXPENSE,
+    category: "test 2",
+    amount: 0,
+    notes: "adqwe",
+    date: new Date(),
+    paymentMethod: "Tarjeta de credito",
   },
 ];
 
@@ -36,6 +37,10 @@ export default function DashboardPage() {
   const handleMonthChange = (month: number, year: number) => {
     setCurrentMonth(month);
     setCurrentYear(year);
+  };
+
+  const handleAddTransaction = (data: any) => {
+    setIsModalOpen(false);
   };
   return (
     <div className="space-y-6 ml-0 md:ml-0">
@@ -58,61 +63,16 @@ export default function DashboardPage() {
       </div>
       <MonthlySummary income={5000} expense={400} balance={3423423} />
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-white">Transacciones</h2>
-        {false ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="text-gray-400 mb-4">
-              <Plus className="h-12 w-12 mx-auto" />
-            </div>
-            <h3 className="text-lg font-medium text-white mb-2">
-              No hay transacciones
-            </h3>
-            <p className="text-sm text-gray-400">
-              No hay transacciones registradas para este mes.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {monthlyTransactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="bg-gray-800 rounded-lg p-4 border border-gray-700"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium text-white">
-                      {transaction.categoria}
-                    </h3>
-                    <p className="text-sm text-gray-400">
-                      {transaction.detalles}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {new Date(transaction.fecha).toLocaleDateString("es-ES")}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <span
-                      className={`font-medium ${
-                        transaction.tipo === "ingreso"
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}
-                    >
-                      {transaction.tipo === "ingreso" ? "+" : "-"}$
-                      {transaction.monto.toFixed(2)}
-                    </span>
-                    {transaction.medioPago && (
-                      <p className="text-xs text-gray-500">
-                        {transaction.medioPago}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <h2 className="text-xl font-semibold text-white">
+          Transacciones del mes
+        </h2>
+        <TransactionList transactions={monthlyTransactions} />
       </div>
+      <TransactionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddTransaction}
+      />
     </div>
   );
 }
