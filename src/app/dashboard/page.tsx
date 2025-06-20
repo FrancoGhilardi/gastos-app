@@ -31,6 +31,7 @@ export default function DashboardPage() {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState<number>(today.getMonth());
   const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleMonthChange = (month: number, year: number) => {
     setCurrentMonth(month);
@@ -46,7 +47,10 @@ export default function DashboardPage() {
             currentYear={currentYear}
             onMonthChange={handleMonthChange}
           />
-          <Button className="bg-blue-600 hover:bg-blue-700">
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
             <Plus className="mr-2 h-4 w-4" />
             Nueva transacción
           </Button>
